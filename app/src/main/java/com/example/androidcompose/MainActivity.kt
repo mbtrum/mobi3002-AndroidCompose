@@ -21,6 +21,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -29,13 +30,20 @@ import com.example.androidcompose.ui.screens.Home
 import com.example.androidcompose.ui.theme.AndroidComposeTheme
 
 class MainActivity : ComponentActivity() {
+
+    // define view model
+    private lateinit var mainViewModel: MainViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             AndroidComposeTheme {
-                // This is the entry point into our app
-                DisplayUI()
+                // initialize view model
+                mainViewModel = viewModel()
+
+                // This is the entry point into our app. Pass in the view model
+                DisplayUI(mainViewModel)
             }
         }
     }
@@ -43,7 +51,7 @@ class MainActivity : ComponentActivity() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DisplayUI() {
+fun DisplayUI(mainViewModel: MainViewModel) {
 
     // Add nav controller
     val navController = rememberNavController()
@@ -51,19 +59,21 @@ fun DisplayUI() {
     // Selected index for the nav bar
     var selectedIndex by remember { mutableIntStateOf(0) }
 
+    //val person by mainViewModel.person.collectAsState()
+
     Scaffold(
         topBar = {
             TopAppBar(
                 title = {
-                    Text("Android Navigation")
+                    Text("Android Compose")
                 },
                 // add colors for the top app bar
                 colors = TopAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primaryContainer,
                     titleContentColor = MaterialTheme.colorScheme.primary,
-                    scrolledContainerColor = TODO(),
-                    navigationIconContentColor = TODO(),
-                    actionIconContentColor = TODO()
+                    scrolledContainerColor = MaterialTheme.colorScheme.primaryContainer,
+                    navigationIconContentColor = MaterialTheme.colorScheme.primary,
+                    actionIconContentColor = MaterialTheme.colorScheme.primary
                 )
             )
         },
@@ -106,7 +116,7 @@ fun DisplayUI() {
                 Home()
             }
             composable(route = "hello") {
-                Hello()
+                Hello(mainViewModel)
             }
         }
     }
