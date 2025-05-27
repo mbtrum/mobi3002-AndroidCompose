@@ -1,1 +1,1 @@
-This app covers intro to Compose, Models, ViewModel.
+This app covers intro to Compose, Navigation, Models, ViewModel.
